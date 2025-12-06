@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  backend:
+    build: ./backend-nest
+    container_name: backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  python-collector:
+    build: ./python-collector
+    container_name: python-collector
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+
+  go-worker:
+    build: ./go-worker
+    container_name: go-worker
+    depends_on:
+      - rabbitmq
+      - backend
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - BACKEND_URL=http://backend:3001
+
+  frontend:
+    build:
+      context: ./frontend-react
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
