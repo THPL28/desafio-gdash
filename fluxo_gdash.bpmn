@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  id="Definitions_1"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_GDASH" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1" name="Usuário acessa Frontend"/>
+    <bpmn:task id="Task_1" name="Frontend envia requisição REST"/>
+    <bpmn:task id="Task_2" name="Backend autentica e autoriza (JWT/RBAC)"/>
+    <bpmn:exclusiveGateway id="Gateway_1" name="Dados em cache?"/>
+    <bpmn:task id="Task_3" name="Consulta MongoDB/Cache"/>
+    <bpmn:task id="Task_4" name="Consulta APIs externas (se necessário)"/>
+    <bpmn:task id="Task_5" name="Python Collector coleta dados e envia para RabbitMQ"/>
+    <bpmn:task id="Task_6" name="Go Worker consome RabbitMQ e salva no MongoDB"/>
+    <bpmn:task id="Task_7" name="Backend responde ao Frontend"/>
+    <bpmn:endEvent id="EndEvent_1" name="Usuário visualiza dados"/>
+
+    <bpmn:sequenceFlow id="flow1" sourceRef="StartEvent_1" targetRef="Task_1"/>
+    <bpmn:sequenceFlow id="flow2" sourceRef="Task_1" targetRef="Task_2"/>
+    <bpmn:sequenceFlow id="flow3" sourceRef="Task_2" targetRef="Gateway_1"/>
+    <bpmn:sequenceFlow id="flow4" sourceRef="Gateway_1" targetRef="Task_3">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sim</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="flow5" sourceRef="Gateway_1" targetRef="Task_4">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Não</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="flow6" sourceRef="Task_3" targetRef="Task_7"/>
+    <bpmn:sequenceFlow id="flow7" sourceRef="Task_4" targetRef="Task_5"/>
+    <bpmn:sequenceFlow id="flow8" sourceRef="Task_5" targetRef="Task_6"/>
+    <bpmn:sequenceFlow id="flow9" sourceRef="Task_6" targetRef="Task_7"/>
+    <bpmn:sequenceFlow id="flow10" sourceRef="Task_7" targetRef="EndEvent_1"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_GDASH">
+      <!-- Layout simplificado, pode ser ajustado em editores BPMN -->
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+
+<!--
+Explicação simples do fluxo:
+1. Usuário acessa o Frontend e faz uma requisição (ex: consulta previsão).
+2. O Frontend envia a requisição REST para o Backend.
+3. O Backend autentica e autoriza o usuário (JWT/RBAC).
+4. O Backend verifica se os dados estão em cache/MongoDB.
+   - Se sim, responde imediatamente.
+   - Se não, consulta APIs externas.
+5. O Python Collector coleta dados das APIs e envia para o RabbitMQ.
+6. O Go Worker consome do RabbitMQ e salva no MongoDB.
+7. O Backend responde ao Frontend.
+8. O usuário visualiza os dados na interface.
+-->

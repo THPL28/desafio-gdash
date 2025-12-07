@@ -65,45 +65,6 @@ Invoke-RestMethod -Uri 'http://localhost:3001/auth/login' -Method Post -ContentT
 
 # Export CSV
 Invoke-WebRequest -Uri "http://localhost:3001/weather/export/csv" -UseBasicParsing
----
-## 🎬 Roteiro curto para vídeo (máx. 5 minutos)
-
-1. 30s — Arquitetura geral (mostre o diagrama e explique pipeline).
-2. 60s — Demonstração rápida: rodar `docker compose up -d --build` e abrir o frontend em `http://localhost:5173`.
-3. 60s — Mostrar criação/uso do usuário admin (login) e acessar Dashboard.
-4. 45s — Mostrar a chamada `GET /weather/forecast` e o resultado normalizado (timeline, peak temp).
-5. 45s — Exportar CSV/XLSX e mostrar o arquivo baixado.
-6. 30s — Explicar como os insights são gerados (breve descrição do algoritmo e exemplos).
-7. 30s — Encerramento com instruções para rodar local/produção e link para o README/PR.
-
-Checklist para gravação:
-- Grave em tela cheia com áudio claro.
-- Mostre comandos executados no terminal e a UI funcionando.
-- Inclua link do vídeo no README ou no PR.
-
----
-## ✅ Checklist do Pull Request
-
-- Código do backend (NestJS) e frontend (Vite) presentes na branch.
-- `docker-compose.yml` orquestrando todos os serviços necessários.
-- `.env.example` incluído e atualizado.
-- README completo com passos para rodar local e deploy.
-- Link do vídeo (YouTube não listado) na descrição do PR.
-- Testes manuais executados (descritos no README).
-
----
-Se quiser, eu posso agora:
-
-- (A) Testar o pipeline completo localmente iniciando `python-collector` e `go-worker` e monitorando logs.
-- (B) Fazer o build de produção do frontend, ajustar Dockerfile para servir static build e testar.
-- (C) Preparar instruções específicas de deploy para Render ou Railway (com passos passo-a-passo).
-
-Indique qual opção prefere e eu prossigo exatamente nessa ordem.
-# GDASH - Weather Data Pipeline Challenge 🌤️
-
-**Desafio para o processo seletivo GDASH 2025/02**
-
-Um sistema completo de pipeline de dados de clima construído com tecnologias modernas: Python (coleta), RabbitMQ (broker), Go (worker), NestJS (API), MongoDB (persistência) e React (frontend).
 
 ---
 
@@ -494,6 +455,9 @@ curl -X POST http://localhost:3001/users \
 
 Desenvolvido por Tiago Looze para o Desafio GDASH 2025/02
 
+
+## Video Explicativo da aplicação
+[youtube](https://www.youtube.com/watch?v=y7DJvmLQezc)
 
 Para rodar testes (exemplo backend):
 ```bash
