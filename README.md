@@ -457,7 +457,7 @@ Desenvolvido por Tiago Looze para o Desafio GDASH 2025/02
 
 
 ## Video Explicativo da aplicação
-[youtube](https://www.youtube.com/watch?v=y7DJvmLQezc)
+[youtube video de apresentação](https://www.youtube.com/watch?v=y7DJvmLQezc)
 
 Para rodar testes (exemplo backend):
 ```bash
